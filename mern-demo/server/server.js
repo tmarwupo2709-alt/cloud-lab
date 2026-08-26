@@ -1,3 +1,8 @@
+// Cấu hình DNS giải quyết lỗi querySrv ECONNREFUSED
+const dns = require("node:dns");
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
