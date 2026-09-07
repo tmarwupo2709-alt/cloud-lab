@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/students";
+const API_URL =
+  "https://jubilant-carnival-5gj7xpwrpjr6fxx-5000.app.github.dev/api/students";
 
 function App() {
   const [students, setStudents] = useState([]);
@@ -122,8 +123,7 @@ function App() {
         fontFamily: "Arial, sans-serif"
       }}
     >
-      <h2>Quản lý Sinh viên</h2>
-
+      <h2>Quản lý Sinh viên - Phiên bản 2.0</h2>
       {apiError && (
         <div
           style={{
@@ -134,8 +134,7 @@ function App() {
             borderRadius: "4px"
           }}
         >
-          <strong>Lỗi kết nối API Backend:</strong>{" "}
-          {apiError}
+          <strong>Lỗi kết nối API Backend:</strong> {apiError}
           <br />
           Vui lòng kiểm tra Backend trên cổng 5000.
         </div>
@@ -244,8 +243,7 @@ function App() {
         </thead>
 
         <tbody>
-          {Array.isArray(students) &&
-          students.length > 0 ? (
+          {Array.isArray(students) && students.length > 0 ? (
             students.map((sv, index) => {
               const id = sv._id || sv.studentId || index;
               return (
