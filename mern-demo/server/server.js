@@ -14,6 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/api/hello", (req, res) => {
+  res.status(200).json({
+    message: "Hello from Backend!",
+    status: "success"
+  });
+});
+
 // ===============================
 // MODEL SINH VIÊN
 // ===============================
