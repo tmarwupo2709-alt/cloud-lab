@@ -4,8 +4,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - "MONGODB_URI=mongodb://tmarwupo2709_db_user:Cham12345@ac-ruovbkj-shard-00-00.agz1lvp.mongodb.net:27017,ac-ruovbkj-shard-00-01.agz1lvp.mongodb.net:27017,ac-ruovbkj-shard-00-02.agz1lvp.mongodb.net:27017/?ssl=true&replicaSet=atlas-br3hgj-shard-0&authSource=admin&appName=cloud-lab"
-
+      - "MONGODB_URI=mongodb+srv://tmarwupo2709_db_user:vVA6VVNZ4FAokWMp@cloud-lab.agz1lvp.mongodb.net/?appName=cloud-lab"
   frontend:
     image: chamcham27/mern-frontend:1.1
     ports:

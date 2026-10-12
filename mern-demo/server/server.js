@@ -6,13 +6,42 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 require("dotenv").config();
 
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 
-app.use(cors());
+// Cấu hình CORS linh hoạt cho Production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000"
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      process.env.NODE_ENV !== "production"
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(
+    `${new Date().toISOString()} ${req.method} ${req.originalUrl}`
+  );
+  next();
+});
+
 
 app.get("/api/hello", (req, res) => {
   res.status(200).json({
@@ -40,7 +69,9 @@ const studentSchema = new mongoose.Schema({
   }
 });
 
-const Student = mongoose.model("Student", studentSchema);
+const Student = mongoose.model("Student", studentSchema, "students");
+console.log("Database:", mongoose.connection.name);
+console.log("Collection:", Student.collection.name);
 
 // ===============================
 // API GET - LẤY DANH SÁCH

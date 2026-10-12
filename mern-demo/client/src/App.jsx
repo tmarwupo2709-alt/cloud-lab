@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const API_URL =
-  "https://jubilant-carnival-5gj7xpwrpjr6fxx-5000.app.github.dev/api/students";
+  "https://mern-backend-235501.onrender.com/api/students";
 
 function App() {
   const [students, setStudents] = useState([]);
