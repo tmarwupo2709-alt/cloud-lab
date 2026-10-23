@@ -1,3 +1,4 @@
+
 const dns = require("node:dns");
 
 dns.setDefaultResultOrder("ipv4first");
@@ -11,7 +12,9 @@ const mongoose = require("mongoose");
 
 const app = express();
 
-// Cấu hình CORS linh hoạt cho Production
+// ===============================
+// CẤU HÌNH CORS
+// ===============================
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
@@ -25,16 +28,19 @@ app.use(cors({
       allowedOrigins.includes(origin) ||
       process.env.NODE_ENV !== "production"
     ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+      return callback(null, true);
     }
+
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true
 }));
 
 app.use(express.json());
 
+// ===============================
+// MIDDLEWARE GHI LOG REQUEST
+// ===============================
 app.use((req, res, next) => {
   console.log(
     `${new Date().toISOString()} ${req.method} ${req.originalUrl}`
@@ -42,7 +48,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
+// ===============================
+// API KIỂM TRA BACKEND
+// ===============================
 app.get("/api/hello", (req, res) => {
   res.status(200).json({
     message: "Hello from Backend!",
@@ -69,19 +77,23 @@ const studentSchema = new mongoose.Schema({
   }
 });
 
-const Student = mongoose.model("Student", studentSchema, "students");
-console.log("Database:", mongoose.connection.name);
-console.log("Collection:", Student.collection.name);
+const Student = mongoose.model(
+  "Student",
+  studentSchema,
+  "students"
+);
 
 // ===============================
-// API GET - LẤY DANH SÁCH
+// API GET - LẤY DANH SÁCH SINH VIÊN
 // ===============================
 app.get("/api/students", async (req, res) => {
   try {
     const students = await Student.find();
+
     res.status(200).json(students);
   } catch (error) {
     console.error("GET students error:", error);
+
     res.status(500).json({
       message: error.message
     });
@@ -106,7 +118,7 @@ app.post("/api/students", async (req, res) => {
 });
 
 // ===============================
-// API PUT - SỬA SINH VIÊN
+// API PUT - CẬP NHẬT SINH VIÊN
 // ===============================
 app.put("/api/students/:id", async (req, res) => {
   try {
@@ -163,15 +175,16 @@ app.delete("/api/students/:id", async (req, res) => {
 });
 
 // ===============================
-// KẾT NỐI MONGODB RỒI MỚI CHẠY SERVER
+// KẾT NỐI MONGODB VÀ KHỞI ĐỘNG SERVER
 // ===============================
-
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
     if (!process.env.MONGODB_URI) {
-      throw new Error("MONGODB_URI chưa được cấu hình trong file .env");
+      throw new Error(
+        "MONGODB_URI chưa được cấu hình trong file .env"
+      );
     }
 
     await mongoose.connect(process.env.MONGODB_URI, {
@@ -179,13 +192,15 @@ async function startServer() {
     });
 
     console.log("MongoDB Atlas connected successfully!");
+    console.log("Database:", mongoose.connection.name);
+    console.log("Collection:", Student.collection.name);
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("MongoDB connection error:");
-    console.error(error.message);
+    console.error("Server startup error:", error.message);
+    process.exitCode = 1;
   }
 }
 
